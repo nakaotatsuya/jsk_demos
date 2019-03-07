@@ -5,6 +5,7 @@
 (load "kawamura-move-functions.l")
 (load "wasuremono.l")
 (load "kaida-move-to-room.l")
+(load "knock.l")
 ;; load demo codes, all init code is written in init.l and (init)
 ;; (load "say-hello.l")
 
@@ -26,4 +27,8 @@
 
 (defun kaida nil
   (wasuremono)
+)
+
+(defun nakao nil
+  (knock)
 )

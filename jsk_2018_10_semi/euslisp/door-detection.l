@@ -15,19 +15,9 @@
  ;; )
   )
 
-;;(defun cb (msg)
-;;  (setq *poly* (send (car (send msg :polygons)) :polygon))
-;;  (setq poly (car (send *poly* :points)))
-  ;;(print poly)
-;;  )
-;;(defun front-door-pose nil
-;;  (send *
-
 (ros::subscribe "/multi_plane_estimate/output_coefficients" jsk_recognition_msgs::ModelCoefficientsArray #'door-detec-callback)
-;;(ros::subscribe "/multi_plane_estimate/output_polygon" jsk_recognition_msgs::PolygonArray #'cb)
 
 (do-until-key
- ;;(x::window-main-one)
  (ros::sleep)
  (ros::spin-once))
 (exit)

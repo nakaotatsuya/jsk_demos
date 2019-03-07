@@ -1,39 +1,30 @@
-(defun knock nil
+#!/usr/bin/env roseus
 
-  (send *fetch* :torso :waist-z :joint-angle 220)
-  (setq av0 (send *fetch* :angle-vector))
+(ros::load-ros-manifest "geometry_msgs")
+(ros::roseus "knock")
 
-  (send *fetch* :rarm :inverse-kinematics (send (send *fetch* :copy-worldcoords) :transform (make-coords :pos #f(600 0 700))) :debug-view t)
-  (setq av1 (send *fetch* :angle-vector))
+(setq *topic* "/arm_controller/cartesian_wrench/command")
 
-  (send *fetch* :rarm :inverse-kinematics (send (send *fetch* :copy-worldcoords) :transform (make-coords :pos #f(620 0 700))) :debug-view t)
-  (setq av2 (send *fetch* :angle-vector))
+(ros::advertise *topic* geometry_msgs::Wrench 1)
 
-  (send *ri* :angle-vector-sequence (list av0 av1 av2 av1 av2 av1) (list 4000 2000 2000 2000 2000 2000))
+(defun knock()
+  (send *ri* :start-grasp :wait t :effort 60)
+  (let ((msg (instance geometry_msgs::Wrench :init))
+	(angle-vector (send *fetch* :angle-vector)))
+    (dotimes (i 3)
+      (ros::rate 10)
+      (send (send msg :force) :x 50)
+      (send (send msg :force) :z 25)
+      (dotimes (i 10)
+	(ros::publish *topic* msg)
+	(ros::sleep))
+      
+      (send (send msg :force) :x -50)
+      (send (send msg :force) :z -25)
+      (dotimes (i 10)
+	(ros::publish *topic* msg)
+	(ros::sleep))
+      (send *ri* :angle-vector (send *fetch* :angle-vector angle-vector) 1000)
+      (send *ri* :wait-interpolation)
+     )))
 
-  (send *ri* :wait-interpolation)
-  (send *fetch* :reset-pose)
-
-  (send *ri* :angle-vector (send *fetch* :angle-vector)) 
-  )
-
-(defun neck-reset nil
-  (send *fetch* :head :neck-y :joint-angle 0)
-  (send *fetch* :head :neck-p :joint-angle 0)
-  (send *fetch* :torso :waist-z :joint-angle 220)
-  (send *ri* :angle-vector (send *fetch* :angle-vector))
-  (send *ri* :wait-interpolation)
-  )
-
-;;(send *fetch* :torso :waist-z :joint-angle 0)
-;;(send *fetch* :rarm :shoulder-y :joint-angle -90.0)
-;;(send *fetch* :rarm :shoulder-p :joint-angle -20.0)
-;;(send *fetch* :rarm :shoulder-r :joint-angle 0.0)
-;;(send *fetch* :rarm :elbow-p :joint-angle 50.0)
-;;(send *fetch* :rarm :elbow-r :joint-angle -60.0)
-;;(send *fetch* :rarm :wrist-p :joint-angle 10.0)
-;;(send *fetch* :rarm :wrist-r :joint-angle 0.0)
-;;(send *fetch* :head :neck-y :joint-angle 0.0)
-;;(send *fetch* :head :neck-p :joint-angle 0.0)
-
-;(send *ri* :angle-vector (send *fetch* :angle-vector))
