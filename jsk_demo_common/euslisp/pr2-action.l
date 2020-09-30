@@ -484,10 +484,10 @@
 (warn ";; define grasp-can-single")
 (defun grasp-can-single (obj &key (rotation 0) (use-arm :rarm) (grasp-depth 35)(func-time 7))
   (let (via1 via2 tar orig-av (mvt (* (/ (- func-time 4) 4.0) 1000)));; mvt is about 3000. we assume it takes 4 sec other than sending :angle-vector, and there are 4 :angle-vector in this funciton
-    (send *ri* :stop-grasp use-arm)
+    (send *ri* :stop-grasp use-arm :wait t)
     (send *tfb* :send-transform
           (send (send *pr2* :worldcoords) :transformation (send obj :worldcoords))
-          "/base_footprint" "/objecta_pose_frame")
+          "/base_footprint" "/object_pose_frame")
     (setq orig-av (send *ri* :state :potentio-vector))
 
     (when *use-arm-navigation*
@@ -510,11 +510,11 @@
 
     ;; publish tf
     (send *tfb* :send-transform
-          via1 "/base_footprint" "/objecta_pose_frame_via1")
+          via1 "/base_footprint" "/object_pose_frame_via1")
     ;;(send *tfb* :send-transform
     ;;via2 "/base_footprint" "/objecta_pose_frame_via2")
     (send *tfb* :send-transform
-          via2 "/base_footprint" "/objecta_pose_frame_via2")
+          via2 "/base_footprint" "/object_pose_frame_via2")
 
     ;; move to via1
     (send *pr2* use-arm :inverse-kinematics
@@ -522,7 +522,7 @@
           :rotation-axis t)
     (send *tfb* :send-transform
           (send (send *pr2* :worldcoords) :transformation (send *pr2* use-arm :end-coords))
-          "/base_footprint" "/objecta_pose_end_coords")
+          "/base_footprint" "/object_pose_end_coords")
 
     ;;(send *ri* :angle-vector (send *pr2* :angle-vector))
     ;;(send *ri* :wait-interpolation))
@@ -946,8 +946,8 @@
        (send *ri* :go-pos-unsafe 0.185 -0.25 0) ;; g-rarm
        )
       (:larm
-       (send *ri* :go-pos-unsafe 0 0 rotation) ;; g-rarm
-       (send *ri* :go-pos-unsafe 0.33 -0.05 0) ;; g-rarm
+       (send *ri* :go-pos-unsafe 0 0 rotation) ;; g-larm
+       (send *ri* :go-pos-unsafe 0.27 -0.03 0) ;; g-larm
        ))
     (send *ri* :wait-interpolation))
 
@@ -957,7 +957,7 @@
 
 
 (defun grasp-can-init ()
-  (send *pr2* :head :neck-p :joint-angle 20)
+  (send *pr2* :head :neck-p :joint-angle 30)
   (send *pr2* :head :neck-y :joint-angle 23)
   (send *ri* :angle-vector (send *pr2* :angle-vector) 2000 :head-controller)
   )
@@ -972,10 +972,10 @@
      ((not (send *ri* :simulation-modep)) ;; real mode
       (unless (setq cds (check-detection :speak-name *type*
                                          :type *type* :tf-force t :timeout 35 :single t
-                                         :detection-topic "/kinect_head_c2/depth_registered/ObjectDetection"))
+                                         :detection-topic "/kinect_head/depth_registered/ObjectDetection"))
         (setq cds (check-detection :speak-name *type*
                                    :type *type* :tf-force t :timeout 70 :single t
-                                   :detection-topic "/kinect_head_c2/depth_registered/ObjectDetection"))))
+                                   :detection-topic "/kinect_head/depth_registered/ObjectDetection"))))
      (t ;; simulation mode
       (setq cds (send (make-cube 60 60 60) :translate (float-vector 756 302 1164)))))
     (setq *can-cds* cds)
