@@ -41,8 +41,8 @@
     </include>
     <include>
       <name>kettle</name>
-      <uri>model://kettle</uri>
-      <pose>0.78 0 0.90 0.0 0.0 3.14</pose>
+      <uri>model://kettle-body</uri>
+      <pose>0.78 0 0.80 0.0 0.0 3.14</pose>
     </include>
   </world>
 </sdf>

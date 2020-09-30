@@ -2,10 +2,11 @@
   <arg name="gui" default="true"/>
 
   <arg name="INPUT" default="/kinect_head/depth_registered/throttled/points" />
+  <!-- <arg name="INPUT" default="/camera/depth_registered/points" /> -->
 
-  <node name="referene_tf_publisher"
-        pkg="tf" type="static_transform_publisher"
-        args="0 0.13 1.22 -1.57 2.48 0 head_mount_kinect_rgb_optical_frame reference 10" />
+  <!-- <node name="referene_tf_publisher" -->
+  <!--       pkg="tf" type="static_transform_publisher" -->
+  <!--       args="0 0.13 1.22 -1.57 2.48 0 heaed_mount_kinect_rgb_optical_frame reference 10" /> -->
   
   <node name="pcd_to_pointcloud"
         pkg="pcl_ros" type="pcd_to_pointcloud"

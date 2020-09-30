@@ -1,25 +1,23 @@
 <launch>
   <arg name="manager" default="pointcloud" />
   <arg name="gui" default="true" />
-  <!-- <arg name="INPUT" default="/kinect_head/depth_registered/throttled/points" /> -->
-  <arg name="INPUT" default="/camera/depth_registered/points" />
+  <arg name="INPUT" default="/hsrb/head_rgbd_sensor/depth_registered/points" />
 
   <group ns="pcl_nodelet">
     <node name="$(arg manager)" pkg="nodelet" type="nodelet" args="manager"
             output="screen" />
-
 
     <node name="boxfilter_pre" pkg="nodelet" type="nodelet"
 	  args="standalone jsk_pcl/AttentionClipper" output="screen">
       <remap from="~input/points" to="$(arg INPUT)" />
       <rosparam>
         use_multiple_attention: false
-        initial_pos: [0.4, -0.40, 0.8]
+        initial_pos: [0.0, 0.20, 0.8]
         initial_rot: [0, 0, 0]
         dimension_x: 0.25
         dimension_y: 0.25
-        dimension_z: 1.55
-        frame_id: camera_rgb_frame
+        dimension_z: 0.25
+        frame_id: head_rgbd_sensor_rgb_frame
       </rosparam>
     </node>
 
@@ -32,9 +30,9 @@
       </rosparam>
     </node>
 
-    <node name="make_models" pkg="jsk_2020_04_chahakobi" type="merge_pointcloud_from_tf_test.py">
-      <remap from="~input" to="/pcl_nodelet/ExtractIndices/output" />
-    </node>
+    <!-- <node name="make_models" pkg="jsk_2020_04_chahakobi" type="merge_pointcloud_from_tf.py"> -->
+    <!--   <remap from="~input" to="/pcl_nodelet/ExtractIndices/output" /> -->
+    <!-- </node> -->
   </group>
 
   <group if="$(arg gui)">

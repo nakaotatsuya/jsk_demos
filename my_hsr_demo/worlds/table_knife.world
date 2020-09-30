@@ -40,9 +40,9 @@
       <pose>1.02 0.0 0.0 0.0 0.0 0</pose>
     </include>
     <include>
-      <name>kettle</name>
-      <uri>model://kettle</uri>
-      <pose>0.78 0 0.90 0.0 0.0 3.14</pose>
+      <name>room73b2-iemon-0</name>
+      <uri>model://room73b2-knife</uri>
+      <pose>0.7 0.0 0.705 -1.57 0.0 0</pose>
     </include>
   </world>
 </sdf>

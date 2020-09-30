@@ -56,7 +56,7 @@
     </rosparam>
   </node>
   <node name="tf_world_publisher" pkg="tf" type="static_transform_publisher"
-	args="0 0 0 0 0 0 /world /map 100" />
+        args="0 0 0 0 0 0 /world /map 100" />
 
   <include if="$(arg launch_pr2_base_trajectory_action)"
            file="$(find pr2_base_trajectory_action)/launch/pr2_base_trajectory_action.launch" />
